@@ -6,10 +6,10 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-gradient-to-b from-brand-50 to-slate-50">
+    <section id="home" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-gradient-to-b from-brand-50 to-slate-50">
       <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[800px] h-[800px] bg-brand-200/40 rounded-full blur-3xl opacity-50" />
       <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/3 w-[600px] h-[600px] bg-blue-200/40 rounded-full blur-3xl opacity-50" />
-      
+
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="max-w-3xl">
           <motion.div
@@ -21,7 +21,7 @@ export default function Hero() {
             <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
             Admissions for Fall 2024 are Open
           </motion.div>
-          
+
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -30,7 +30,7 @@ export default function Hero() {
           >
             Your bridge to the world's <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-blue-600">best universities.</span>
           </motion.h1>
-          
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -39,7 +39,7 @@ export default function Hero() {
           >
             Expert guidance for international students. Discover programs, secure scholarships, and simplify your application process with our dedicated consultants.
           </motion.p>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
