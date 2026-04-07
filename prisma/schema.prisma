@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Inquiry {
+  id                 String   @id @default(cuid())
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  // Personal info
+  fullName           String
+  email              String
+  phone              String?
+  nationality        String
+
+  // Academic
+  educationLevel     String
+  gpa                Float?
+  preferredCountries String[]
+  preferredMajor     String?
+  intakeYear         Int
+  intakeSeason       String
+
+  // Budget
+  budgetRange        String?
+
+  // Message
+  message            String?
+
+  // Status managed by staff
+  status             String   @default("NEW")
+  notes              String?
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String   // hashed
+  createdAt DateTime @default(now())
+}
