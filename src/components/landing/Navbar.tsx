@@ -14,9 +14,10 @@ export default function Navbar() {
           <span className="font-serif text-2xl font-bold text-slate-800 tracking-tight">UniPath</span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 font-medium text-slate-600">
+          <Link href="#services" className="hover:text-brand-600 transition">Home</Link>
           <Link href="#services" className="hover:text-brand-600 transition">Services</Link>
           <Link href="#destinations" className="hover:text-brand-600 transition">Destinations</Link>
-          <Link href="#how-it-works" className="hover:text-brand-600 transition">How it Works</Link>
+          {/* <Link href="#how-it-works" className="hover:text-brand-600 transition">How it Works</Link> */}
           <Link href="/admin" className="hover:text-brand-600 transition text-sm">Staff Login</Link>
         </nav>
         <Link href="#apply" className="bg-slate-900 text-white px-6 py-2.5 rounded-full font-medium hover:bg-slate-800 transition shadow-lg shadow-slate-200">

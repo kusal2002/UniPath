@@ -97,7 +97,7 @@ export default async function AdminDashboard() {
                           {inquiry.educationLevel}
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-600">
+                      <td className="px-6 py-4 text-sm text-slate-600" suppressHydrationWarning>
                         {formatDistanceToNow(new Date(inquiry.createdAt), { addSuffix: true })}
                       </td>
                       <td className="px-6 py-4">

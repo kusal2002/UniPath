@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
@@ -7,15 +9,19 @@ import { format } from "date-fns";
 import { ArrowLeft, Mail, Phone, MapPin, GraduationCap, Calendar, DollarSign, MessageSquare } from "lucide-react";
 import InquiryActions from "@/components/admin/InquiryActions";
 
-export default async function InquiryDetail({ params }: { params: { id: string } }) {
+export default async function InquiryDetail(props: { params: Promise<{ id?: string }> }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
 
   if (!session) {
     redirect("/admin/login");
   }
+  if (!params.id) {
+    notFound();
+  }
 
   const inquiry = await prisma.inquiry.findUnique({
-    where: { id: params.id }
+    where: { id: params.id! }
   });
 
   if (!inquiry) {
@@ -38,7 +44,7 @@ export default async function InquiryDetail({ params }: { params: { id: string }
       <main className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold font-serif text-slate-900 mb-2">{inquiry.fullName}</h1>
-          <p className="text-slate-500 flex items-center gap-2">
+          <p className="text-slate-500 flex items-center gap-2" suppressHydrationWarning>
             Application submitted on {format(new Date(inquiry.createdAt), "MMMM d, yyyy h:mm a")}
           </p>
         </div>
