@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-form-hook";
-// Wait, I should use react-hook-form correctly
-import { useForm as useHookForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2, CheckCircle } from "lucide-react";
@@ -34,7 +32,7 @@ export default function InquiryForm() {
     handleSubmit,
     formState: { errors },
     reset
-  } = useHookForm<FormData>({
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       educationLevel: "",
