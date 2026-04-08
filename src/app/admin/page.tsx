@@ -1,21 +1,49 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import prisma from "@/lib/prisma";
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { FileSearch, LogOut, ArrowRight, User } from "lucide-react";
+import { signOut } from "next-auth/react";
+import Swal from "sweetalert2";
 
-export default async function AdminDashboard() {
-  const session = await getServerSession(authOptions);
+export default function AdminDashboard() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [inquiries, setInquiries] = useState<any[]>([]);
 
-  if (!session) {
-    redirect("/admin/login");
-  }
+  useEffect(() => {
+    if (status === "loading") return;
+    if (!session) {
+      router.push("/admin/login");
+      return;
+    }
 
-  const inquiries = await prisma.inquiry.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+    // Fetch inquiries
+    fetch("/api/inquiries")
+      .then(res => res.json())
+      .then(data => setInquiries(data))
+      .catch(err => console.error("Error fetching inquiries:", err));
+  }, [session, status, router]);
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of the admin dashboard",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, logout",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        signOut({ callbackUrl: "/admin/login" });
+      }
+    });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -27,6 +55,21 @@ export default async function AdminDashboard() {
       default: return "bg-gray-100 text-gray-700 border-gray-200";
     }
   };
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -45,9 +88,12 @@ export default async function AdminDashboard() {
             View Live Site
           </Link>
           <div className="w-px h-6 bg-slate-200"></div>
-          <Link href="/api/auth/signout" className="flex items-center gap-2 text-sm font-medium text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-sm font-medium text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition"
+          >
             <LogOut size={16} /> Logout
-          </Link>
+          </button>
         </div>
       </header>
 

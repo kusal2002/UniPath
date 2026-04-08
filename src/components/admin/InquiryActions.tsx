@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Save, Trash2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 export default function InquiryActions({ 
   id, 
@@ -29,27 +30,66 @@ export default function InquiryActions({
       });
       if (res.ok) {
         router.refresh();
-        alert("Updated successfully");
+        Swal.fire({
+          title: "Success!",
+          text: "Inquiry status updated successfully",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false
+        });
+      } else {
+        throw new Error("Failed to update");
       }
     } catch (err) {
-      alert("Error updating");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to update inquiry status",
+        icon: "error",
+        confirmButtonColor: "#ef4444"
+      });
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this inquiry?")) return;
-    
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone. This will permanently delete the inquiry.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel"
+    });
+
+    if (!result.isConfirmed) return;
+
     setIsDeleting(true);
     try {
       const res = await fetch(`/api/inquiries/${id}`, { method: "DELETE" });
       if (res.ok) {
+        await Swal.fire({
+          title: "Deleted!",
+          text: "The inquiry has been deleted successfully",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false
+        });
         router.push("/admin");
         router.refresh();
+      } else {
+        throw new Error("Failed to delete");
       }
     } catch (err) {
-      alert("Error deleting");
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete inquiry",
+        icon: "error",
+        confirmButtonColor: "#ef4444"
+      });
+    } finally {
       setIsDeleting(false);
     }
   };

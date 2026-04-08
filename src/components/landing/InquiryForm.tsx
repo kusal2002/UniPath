@@ -13,7 +13,10 @@ const formSchema = z.object({
   phone: z.string().optional(),
   nationality: z.string().min(2, "Nationality is required"),
   educationLevel: z.string().min(1, "Please select education level"),
-  gpa: z.string().optional(),
+  gpa: z.union([z.string(), z.number()]).optional().refine(
+    (val) => val === undefined || val === "" || (typeof val === 'number' ? val >= 0 && val <= 4.0 : parseFloat(val) >= 0 && parseFloat(val) <= 4.0),
+    "GPA must be between 0.0 and 4.0"
+  ),
   preferredMajor: z.string().min(2, "Major is required"),
   intakeYear: z.string().min(4, "Year is required"),
   intakeSeason: z.string().min(2, "Season is required"),
@@ -131,6 +134,7 @@ export default function InquiryForm() {
       <div className="space-y-2">
         <label className="text-sm font-medium text-slate-700">GPA (Optional)</label>
         <input {...register("gpa")} type="number" step="0.01" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:border-brand-500 focus:ring-2 focus:ring-brand-200 outline-none transition" placeholder="4.0" />
+        {errors.gpa && <p className="text-red-500 text-xs mt-1">{errors.gpa.message}</p>}
       </div>
 
       <div className="space-y-2 col-span-full md:col-span-1">

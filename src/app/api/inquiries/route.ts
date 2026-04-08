@@ -22,6 +22,14 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
+    // Validate GPA if provided
+    if (body.gpa) {
+      const gpa = parseFloat(body.gpa);
+      if (isNaN(gpa) || gpa < 0 || gpa > 4.0) {
+        return NextResponse.json({ error: "GPA must be between 0.0 and 4.0" }, { status: 400 });
+      }
+    }
+
     const inquiry = await prisma.inquiry.create({
       data: {
         fullName: body.fullName,
